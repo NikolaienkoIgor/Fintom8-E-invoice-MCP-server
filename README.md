@@ -7,6 +7,13 @@
 
 This server acts as an intelligent bridge between LLM agents (Claude, ChatGPT, etc.) and the Fintom8 Compliance Engine. It enables autonomous agents to validate, audit, and correct e-invoices against the latest European standards (EN16931) and Peppol regulations.
 
+**General Functionalities Provided Over MCP:**
+* **Convert Peppol UBL E-Invoice from PDF**
+* **Validate Peppol UBL E-Invoice**
+* **Correct Peppol UBL Invoice**
+
+*Other formats and functionalities can be requested.*
+
 ## 🚀 Features
 
 - **Autonomous Validation:** Agents can send XML content and receive detailed compliance reports.

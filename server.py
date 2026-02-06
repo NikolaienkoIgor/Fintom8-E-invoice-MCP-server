@@ -7,7 +7,8 @@ mcp = FastMCP("Fintom8 E-Invoicing Agent")
 
 # Configuration
 # Default to the dev environment for now, can be overridden
-FINTOM_API_URL = os.getenv("FINTOM_API_URL", "https://fintom8platform-dev.ey.r.appspot.com/backend/validate-schematron/")
+FINTOM_API_URL = os.getenv("FINTOM_API_URL", "https://fintom8platform-dev.ey.r.appspot.com/backend/invoice-agent")
+FINTOM_API_KEY = os.getenv("FINTOM_API_KEY")
 
 @mcp.tool()
 async def validate_invoice(xml_content: str) -> str:
@@ -23,12 +24,20 @@ async def validate_invoice(xml_content: str) -> str:
     Returns:
         JSON string containing the validation result: is_valid boolean and a list of errors/warnings.
     """
+    headers = {}
+    if FINTOM_API_KEY:
+        headers["Authorization"] = f"Bearer {FINTOM_API_KEY}"
+        # Some endpoints might prefer "X-API-KEY", but Bearer is standard. 
+        # If IAP is involved, it might need "Authorization: Bearer <OIDC_TOKEN>" 
+        # or "Proxy-Authorization".
+        
     async with httpx.AsyncClient() as client:
         try:
             # The API expects multipart/form-data
             response = await client.post(
                 FINTOM_API_URL,
                 data={"xml_content": xml_content},
+                headers=headers,
                 timeout=60.0 # Validation might take a moment
             )
             response.raise_for_status()
