@@ -1,0 +1,13 @@
+[project]
+name = "fintom8-mcp-server"
+version = "0.1.0"
+description = "Fintom8 E-Invoicing Agent: The official MCP server for autonomous Peppol validation and compliance checks."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastmcp",
+    "httpx",
+]
+
+[project.urls]
+Homepage = "https://github.com/Fintom8/fintom8-mcp-server"
