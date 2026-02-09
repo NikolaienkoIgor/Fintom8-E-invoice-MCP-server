@@ -5,7 +5,7 @@
 
 **The official Model Context Protocol (MCP) server for Fintom8.**
 
-This server acts as an intelligent bridge between LLM agents (Claude, ChatGPT, etc.) and the Fintom8 Compliance Engine. It enables autonomous agents to validate, audit, and correct e-invoices against the latest European standards (EN16931) and Peppol regulations.
+This server acts as an intelligent bridge to AI agentic Fintom8 E-Invoice Platform. It enables autonomous agents to validate, audit, and correct e-invoices against the latest European standards (EN16931) and Peppol regulations.
 
 **General Functionalities Provided Over MCP:**
 * **Convert Peppol UBL E-Invoice from PDF**
@@ -50,22 +50,85 @@ uvx fintom8-mcp-server
 
 ## 🔑 Configuration
 
-By default, the server connects to the public Fintom8 Validation endpoint.
+By default, the server connects to the public Fintom8 endpoints:
+- **Validation endpoint**: `https://fintom8platform-dev.ey.r.appspot.com/backend/invoice-agent`
+- **Converter endpoint**: `https://fintom8converter-prod.ey.r.appspot.com/backend/converter-workflowv2/`
 
-To use a specific API environment or authenticated tier, set the environment variable:
+To use a specific API environment or authenticated tier, set the environment variables:
 
 ```bash
 export FINTOM_API_URL="https://api.fintom8.com/v1/validate"
+export FINTOM_CONVERTER_URL="https://api.fintom8.com/v1/convert"
 export FINTOM_API_KEY="your-api-key"
 ```
 
 ## 📦 Tools Included
 
-- **`validate_invoice`**: Validates a UBL/Peppol XML invoice.
-  - **Input:** `xml_content` (string)
-  - **Output:** JSON compliance report (Valid/Invalid, Error List)
+### 1. **`convert_pdf_to_invoice`**: Convert PDF invoices to UBL format
+Converts PDF invoice documents to structured UBL/Peppol XML format using AI-powered extraction.
 
-## 🛡️ Privacy & Security
+**Input:**
+- `pdf_path` (string, optional): Path to the PDF file to convert
+- `pdf_base64` (string, optional): Base64-encoded PDF content
+- `invoice_format` (string, default: "ubl"): Output format for the invoice
+- `gemini_model` (string, default: "gemini-3-flash-preview"): The Gemini model to use
+- `max_iterations` (int, default: 3): Maximum number of AI iterations for refinement
+- `verbose_output` (bool, default: false): Include verbose processing details
+
+**Output:** JSON containing the converted UBL invoice and conversion metadata
+
+**Note:** Either `pdf_path` or `pdf_base64` must be provided.
+
+### 2. **`validate_invoice`**: Validate UBL/Peppol XML invoices
+Validates a UBL/Peppol XML invoice against EN16931 and Peppol compliance rules.
+
+**Input:**
+- `xml_content` (string): The raw XML string of the invoice to validate
+
+**Output:** JSON compliance report (Valid/Invalid, Error List)
+
+## � Usage Examples
+
+### Example 1: Convert PDF to UBL Invoice
+```python
+# Using with Claude Desktop or other MCP-compatible client
+convert_pdf_to_invoice(
+    pdf_path="/path/to/invoice.pdf",
+    invoice_format="ubl",
+    gemini_model="gemini-3-flash-preview",
+    max_iterations=3
+)
+```
+
+### Example 2: Validate Converted Invoice
+```python
+# First convert PDF
+result = convert_pdf_to_invoice(pdf_path="/path/to/invoice.pdf")
+
+# Then validate the result
+validate_invoice(xml_content=result["ubl_xml"])
+```
+
+### Example 3: Full Workflow
+```python
+# 1. Convert PDF to UBL
+converted = convert_pdf_to_invoice(
+    pdf_path="/invoices/supplier_invoice.pdf",
+    verbose_output=True
+)
+
+# 2. Validate the converted invoice
+validation_result = validate_invoice(xml_content=converted["ubl_xml"])
+
+# 3. Check compliance
+if validation_result["is_valid"]:
+    print("✅ Invoice is Peppol-compliant!")
+else:
+    print("❌ Validation errors:", validation_result["errors"])
+```
+
+
+## �🛡️ Privacy & Security
 
 This `fintom8-mcp-server` acts as a thin client proxy. 
 - **No data processing** happens within this repository's code.
