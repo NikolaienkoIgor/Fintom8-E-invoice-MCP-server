@@ -8,10 +8,10 @@ import base64
 mcp = FastMCP("Fintom8 E-Invoicing Agent")
 
 # Configuration
-# Default to the dev environment for now, can be overridden
-FINTOM_API_URL = os.getenv("FINTOM_API_URL", "https://fintom8platform-dev.ey.r.appspot.com/backend/invoice-agent")
+# Using production environment by default
+FINTOM_API_URL = os.getenv("FINTOM_API_URL", "https://fintom8converter-prod.ey.r.appspot.com/backend/invoice-agent")
 FINTOM_CONVERTER_URL = os.getenv("FINTOM_CONVERTER_URL", "https://fintom8converter-prod.ey.r.appspot.com/backend/converter-workflowv2/")
-FINTOM_VALIDATOR_URL = os.getenv("FINTOM_VALIDATOR_URL", "https://fintom8platform-dev.ey.r.appspot.com/backend/validator-workflow/")
+FINTOM_VALIDATOR_URL = os.getenv("FINTOM_VALIDATOR_URL", "https://fintom8converter-prod.ey.r.appspot.com/backend/validator-workflow/")
 FINTOM_API_KEY = os.getenv("FINTOM_API_KEY")
 
 @mcp.tool()

@@ -5,7 +5,7 @@ from pathlib import Path
 
 # Mocking the call that the MCP tool would make
 async def test_validation_v2():
-    url = "https://fintom8platform-dev.ey.r.appspot.com/backend/validator-workflow/"
+    url = "https://fintom8converter-prod.ey.r.appspot.com/backend/validator-workflow/"
     xml_path = "converted_invoice.xml"
     
     if not os.path.exists(xml_path):
