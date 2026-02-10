@@ -11,6 +11,7 @@ mcp = FastMCP("Fintom8 E-Invoicing Agent")
 # Default to the dev environment for now, can be overridden
 FINTOM_API_URL = os.getenv("FINTOM_API_URL", "https://fintom8platform-dev.ey.r.appspot.com/backend/invoice-agent")
 FINTOM_CONVERTER_URL = os.getenv("FINTOM_CONVERTER_URL", "https://fintom8converter-prod.ey.r.appspot.com/backend/converter-workflowv2/")
+FINTOM_VALIDATOR_URL = os.getenv("FINTOM_VALIDATOR_URL", "https://fintom8platform-dev.ey.r.appspot.com/backend/validator-workflow/")
 FINTOM_API_KEY = os.getenv("FINTOM_API_KEY")
 
 @mcp.tool()
@@ -107,9 +108,6 @@ async def validate_invoice(xml_content: str) -> str:
     headers = {}
     if FINTOM_API_KEY:
         headers["Authorization"] = f"Bearer {FINTOM_API_KEY}"
-        # Some endpoints might prefer "X-API-KEY", but Bearer is standard. 
-        # If IAP is involved, it might need "Authorization: Bearer <OIDC_TOKEN>" 
-        # or "Proxy-Authorization".
         
     async with httpx.AsyncClient() as client:
         try:
@@ -129,6 +127,69 @@ async def validate_invoice(xml_content: str) -> str:
             return f"Error validating invoice: HTTP {e.response.status_code} - {e.response.text}"
         except Exception as e:
             return f"Error validating invoice: {str(e)}"
+
+@mcp.tool()
+async def validate_invoice_v2(
+    xml_content: str = None,
+    xml_path: str = None,
+    include_comparison: bool = False,
+    include_explanation: bool = False
+) -> str:
+    """
+    Validate an EN16931 XML invoice using Fintom8's validator workflow.
+    
+    Args:
+        xml_content: The raw XML content of the invoice (either xml_content or xml_path must be provided)
+        xml_path: Path to the XML file to validate (either xml_content or xml_path must be provided)
+        include_comparison: Whether to include comparison in the validation result (default: False)
+        include_explanation: Whether to include explanations in the validation result (default: False)
+        
+    Returns:
+        JSON string containing the validation results.
+    """
+    if not xml_content and not xml_path:
+        return "Error: Either xml_content or xml_path must be provided"
+    
+    try:
+        if xml_path:
+            file_path = Path(xml_path)
+            if not file_path.exists():
+                return f"Error: File not found at {xml_path}"
+            xml_data = file_path.read_bytes()
+            filename = file_path.name
+        else:
+            xml_data = xml_content.encode('utf-8')
+            filename = "invoice.xml"
+            
+        async with httpx.AsyncClient() as client:
+            files = {
+                'en16931_xml': (filename, xml_data, 'text/xml')
+            }
+            
+            data = {
+                'include_comparison': str(include_comparison).lower(),
+                'include_explanation': str(include_explanation).lower()
+            }
+            
+            headers = {}
+            if FINTOM_API_KEY:
+                headers["Authorization"] = f"Bearer {FINTOM_API_KEY}"
+                
+            response = await client.post(
+                FINTOM_VALIDATOR_URL,
+                files=files,
+                data=data,
+                headers=headers,
+                timeout=60.0
+            )
+            response.raise_for_status()
+            
+            return response.text
+            
+    except httpx.HTTPStatusError as e:
+        return f"Error in validation workflow: HTTP {e.response.status_code} - {e.response.text}"
+    except Exception as e:
+        return f"Error in validation workflow: {str(e)}"
 
 if __name__ == "__main__":
     mcp.run()
