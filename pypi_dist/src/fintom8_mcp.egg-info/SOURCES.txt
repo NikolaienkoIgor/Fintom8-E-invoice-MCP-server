@@ -1,0 +1,10 @@
+README.md
+pyproject.toml
+src/fintom8_mcp/__init__.py
+src/fintom8_mcp/server.py
+src/fintom8_mcp.egg-info/PKG-INFO
+src/fintom8_mcp.egg-info/SOURCES.txt
+src/fintom8_mcp.egg-info/dependency_links.txt
+src/fintom8_mcp.egg-info/entry_points.txt
+src/fintom8_mcp.egg-info/requires.txt
+src/fintom8_mcp.egg-info/top_level.txt
