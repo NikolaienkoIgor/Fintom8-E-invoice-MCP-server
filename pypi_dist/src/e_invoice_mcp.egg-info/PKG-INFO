@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: e-invoice-mcp
-Version: 0.1.8
+Version: 0.1.11
 Summary: MCP Server for Fintom8 E-Invoicing services (Conversion, Validation, Correction)
 Author-email: Igor Nikolaienko <igor@fintom8.com>
 Project-URL: Homepage, https://github.com/NikolaienkoIgor/Fintom8-E-invoice-MCP-server

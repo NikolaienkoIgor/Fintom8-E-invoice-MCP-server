@@ -18,11 +18,7 @@ FINTOM_API_KEY = os.getenv("FINTOM_API_KEY")
 async def convert_pdf_to_invoice(
     pdf_path: str = None,
     pdf_base64: str = None,
-    invoice_format: str = "ubl",
-    gemini_model: str = "gemini-3-flash-preview",
-    max_iterations: int = 3,
-    version: str = "v1",
-    verbose_output: bool = False
+    invoice_format: str = "ubl"
 ) -> str:
     """
     Convert a PDF invoice to structured e-invoice format (UBL) using Fintom8's AI-powered converter.
@@ -34,9 +30,6 @@ async def convert_pdf_to_invoice(
         pdf_path: Path to the PDF file to convert (either pdf_path or pdf_base64 must be provided)
         pdf_base64: Base64-encoded PDF content (either pdf_path or pdf_base64 must be provided)
         invoice_format: Output format for the invoice (default: "ubl")
-        gemini_model: The Gemini model to use for conversion (default: "gemini-3-flash-preview")
-        max_iterations: Maximum number of AI iterations for refinement (default: 3)
-        verbose_output: Whether to include verbose processing details (default: False)
         
     Returns:
         JSON string containing the converted invoice in UBL format and conversion metadata.
@@ -65,11 +58,7 @@ async def convert_pdf_to_invoice(
             }
             
             data = {
-                'invoice_format': invoice_format,
-                'verbose_output': str(verbose_output).lower(),
-                'gemini_model': gemini_model,
-                'max_iterations': str(max_iterations),
-                'version': version
+                'invoice_format': invoice_format
             }
             
             headers = {}
@@ -85,8 +74,17 @@ async def convert_pdf_to_invoice(
             )
             response.raise_for_status()
             
-            # Return the raw JSON response from the Fintom8 Converter API
-            return response.text
+            # Return a cleaned JSON with only XML and validation summary
+            try:
+                resp_json = response.json()
+                clean_result = {
+                    "xml": resp_json.get("xml") or resp_json.get("ubl_xml"),
+                    "validation_summary": resp_json.get("validation_summary")
+                }
+                import json
+                return json.dumps(clean_result, indent=2, ensure_ascii=False)
+            except:
+                return response.text
             
     except httpx.HTTPStatusError as e:
         return f"Error converting PDF to invoice: HTTP {e.response.status_code} - {e.response.text}"
@@ -154,9 +152,7 @@ async def validate_invoice(
 @mcp.tool()
 async def validate_invoice_v2(
     xml_content: str = None,
-    xml_path: str = None,
-    include_comparison: bool = False,
-    include_explanation: bool = False
+    xml_path: str = None
 ) -> str:
     """
     Validate an EN16931 XML invoice using Fintom8's validator workflow.
@@ -164,8 +160,6 @@ async def validate_invoice_v2(
     Args:
         xml_content: The raw XML content of the invoice (either xml_content or xml_path must be provided)
         xml_path: Path to the XML file to validate (either xml_content or xml_path must be provided)
-        include_comparison: Whether to include comparison in the validation result (default: False)
-        include_explanation: Whether to include explanations in the validation result (default: False)
         
     Returns:
         JSON string containing the validation results.
@@ -189,10 +183,7 @@ async def validate_invoice_v2(
                 'en16931_xml': (filename, xml_data, 'text/xml')
             }
             
-            data = {
-                'include_comparison': str(include_comparison).lower(),
-                'include_explanation': str(include_explanation).lower()
-            }
+            data = {}
             
             headers = {}
             if FINTOM_API_KEY:
@@ -218,11 +209,7 @@ async def validate_invoice_v2(
 async def correct_invoice_xml(
     xml_content: str = None,
     xml_path: str = None,
-    invoice_format: str = "ubl",
-    gemini_model: str = "gemini-3-flash-preview",
-    max_iterations: int = 3,
-    version: str = "v1",
-    verbose_output: bool = False
+    invoice_format: str = "ubl"
 ) -> str:
     """
     Correct or refine an XML invoice using Fintom8's AI-powered converter workflow.
@@ -234,10 +221,6 @@ async def correct_invoice_xml(
         xml_content: The raw XML content of the invoice (either xml_content or xml_path must be provided)
         xml_path: Path to the XML file to correct (either xml_content or xml_path must be provided)
         invoice_format: Output format for the invoice (default: "ubl")
-        gemini_model: The Gemini model to use for correction (default: "gemini-3-flash-preview")
-        max_iterations: Maximum number of AI iterations for refinement (default: 3)
-        version: Workflow version to use (default: "v1")
-        verbose_output: Whether to include verbose processing details (default: False)
         
     Returns:
         JSON string containing the corrected invoice and processing metadata.
@@ -262,11 +245,7 @@ async def correct_invoice_xml(
             }
             
             data = {
-                'invoice_format': invoice_format,
-                'verbose_output': str(verbose_output).lower(),
-                'gemini_model': gemini_model,
-                'max_iterations': str(max_iterations),
-                'version': version
+                'invoice_format': invoice_format
             }
             
             headers = {}
@@ -282,7 +261,17 @@ async def correct_invoice_xml(
             )
             response.raise_for_status()
             
-            return response.text
+            # Return a cleaned JSON with only XML and validation summary
+            try:
+                resp_json = response.json()
+                clean_result = {
+                    "xml": resp_json.get("xml") or resp_json.get("ubl_xml"),
+                    "validation_summary": resp_json.get("validation_summary")
+                }
+                import json
+                return json.dumps(clean_result, indent=2, ensure_ascii=False)
+            except:
+                return response.text
             
     except httpx.HTTPStatusError as e:
         return f"Error in correction workflow: HTTP {e.response.status_code} - {e.response.text}"

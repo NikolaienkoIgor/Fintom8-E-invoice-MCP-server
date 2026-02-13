@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "e-invoice-mcp"
-version = "0.1.8"
+version = "0.1.11"
 authors = [{ name="Igor Nikolaienko", email="igor@fintom8.com" }]
 description = "MCP Server for Fintom8 E-Invoicing services (Conversion, Validation, Correction)"
 readme = "README.md"
