@@ -56,8 +56,8 @@ To use these tools in Claude, add the following to your configuration file:
 
 ### 1. `convert_pdf_to_invoice`
 Converts PDF invoices to structured UBL format.
--   **Args**: `pdf_path` (path) or `pdf_base64` (string), `invoice_format` (string).
--   **Output**: JSON with UBL XML and metadata.
+-   **Args**: `pdf_path` (path).
+-   **Output**: UBL XML.
 
 ### 2. `validate_invoice` (Basic Validation)
 Validates UBL/Peppol XML invoices against compliance rules.
