@@ -71,7 +71,7 @@ Deep validation with optional AI explanations.
 
 ### 4. `correct_invoice_xml`
 AI-powered correction of invalid XML invoices.
--   **Args**: `xml_content` (string) or `xml_path` (path), `invoice_format` (string).
+-   **Args**: `xml_content` (string) or `xml_path` (path).
 -   **Output**: Fixed XML content.
 
 ---

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: e-invoice-mcp
-Version: 0.1.11
+Version: 0.1.12
 Summary: MCP Server for Fintom8 E-Invoicing services (Conversion, Validation, Correction)
 Author-email: Igor Nikolaienko <igor@fintom8.com>
 Project-URL: Homepage, https://github.com/NikolaienkoIgor/Fintom8-E-invoice-MCP-server
@@ -18,16 +18,15 @@ Requires-Dist: httpx
 
 **The official Model Context Protocol (MCP) server for Fintom8.**
 
-This server acts as an intelligent bridge to the AI-driven Fintom8 E-Invoice Platform. It enables autonomous agents (like Claude) to validate, audit, and correct e-invoices against the latest European standards (EN16931) and Peppol regulations.
+This server acts as an intelligent bridge to the AI-driven Fintom8 E-Invoice Platform. It enables autonomous agents to validate, audit, and correct e-invoices against the latest European standards (EN16931) and Peppol regulations.
 
 ---
 
 ## 🚀 Features
 
 -   **PDF to UBL Conversion:** Use Gemini-powered AI to extract data from PDF invoices and generate compliant XML.
--   **Automated Validation:** Instant checks against EN16931 and Peppol 3.0.20 rules.
--   **AI Correction:** Automatically fix non-compliant XML invoices using iterative AI refinement.
--   **Production Ready:** High performance with extended timeouts for heavy AI operations.
+-   **Automated Validation:** Instant checks against EN16931 and Peppol rules.
+-   **Correction:** Automatically fix non-compliant XML invoices.
 
 ---
 

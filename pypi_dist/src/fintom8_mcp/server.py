@@ -18,9 +18,7 @@ FINTOM_API_KEY = os.getenv("FINTOM_API_KEY")
 
 @mcp.tool()
 async def convert_pdf_to_invoice(
-    pdf_path: str = None,
-    pdf_base64: str = None,
-    invoice_format: str = "ubl"
+    pdf_path: str = None
 ) -> str:
     """
     Convert a PDF invoice to structured e-invoice format (UBL) using Fintom8's AI-powered converter.
@@ -29,15 +27,13 @@ async def convert_pdf_to_invoice(
     compliant UBL/Peppol format.
     
     Args:
-        pdf_path: Path to the PDF file to convert (either pdf_path or pdf_base64 must be provided)
-        pdf_base64: Base64-encoded PDF content (either pdf_path or pdf_base64 must be provided)
-        invoice_format: Output format for the invoice (default: "ubl")
+        pdf_path: Path to the PDF file to convert
         
     Returns:
         JSON string containing the converted invoice in UBL format and conversion metadata.
     """
-    if not pdf_path and not pdf_base64:
-        return "Error: Either pdf_path or pdf_base64 must be provided"
+    if not pdf_path:
+        return "Error: pdf_path must be provided"
     
     try:
         # Prepare the PDF file content
@@ -47,11 +43,6 @@ async def convert_pdf_to_invoice(
                 return f"Error: File not found at {pdf_path}"
             pdf_content = file_path.read_bytes()
             filename = file_path.name
-        else:
-            # Decode base64
-            import base64
-            pdf_content = base64.b64decode(pdf_base64)
-            filename = "invoice.pdf"
         
         async with httpx.AsyncClient(follow_redirects=True) as client:
             # Prepare multipart form data
@@ -59,9 +50,7 @@ async def convert_pdf_to_invoice(
                 'file': (filename, pdf_content, 'application/pdf')
             }
             
-            data = {
-                'invoice_format': invoice_format
-            }
+            data = {}
             
             headers = {}
             if FINTOM_API_KEY:
@@ -96,8 +85,7 @@ async def convert_pdf_to_invoice(
 @mcp.tool()
 async def validate_invoice(
     xml_content: str = None,
-    xml_path: str = None,
-    version: str = "v1"
+    xml_path: str = None
 ) -> str:
     """
     Validate a Peppol/UBL invoice XML against EN16931 and Peppol compliance rules.
@@ -105,7 +93,6 @@ async def validate_invoice(
     Args:
         xml_content: The raw XML string of the invoice (either xml_content or xml_path must be provided)
         xml_path: Path to the XML file to validate (either xml_content or xml_path must be provided)
-        version: Workflow version to use (default: "v1")
         
     Returns:
         JSON string containing the validation result.
@@ -132,12 +119,7 @@ async def validate_invoice(
             files = {
                 'en16931_xml': (filename, xml_data, 'text/xml')
             }
-            data = {
-                # validator workflow accepts include_comparison/explanation params
-                # defaulting to false for v1 basic validation
-                'include_comparison': 'false', 
-                'include_explanation': 'false'
-            }
+            data = {}
             
             response = await client.post(
                 FINTOM_VALIDATOR_URL,
@@ -215,8 +197,7 @@ async def validate_invoice_v2(
 @mcp.tool()
 async def correct_invoice_xml(
     xml_content: str = None,
-    xml_path: str = None,
-    invoice_format: str = "ubl"
+    xml_path: str = None
 ) -> str:
     """
     Correct or refine an XML invoice using Fintom8's AI-powered converter workflow.
@@ -227,7 +208,6 @@ async def correct_invoice_xml(
     Args:
         xml_content: The raw XML content of the invoice (either xml_content or xml_path must be provided)
         xml_path: Path to the XML file to correct (either xml_content or xml_path must be provided)
-        invoice_format: Output format for the invoice (default: "ubl")
         
     Returns:
         JSON string containing the corrected invoice and processing metadata.
@@ -251,9 +231,7 @@ async def correct_invoice_xml(
                 'file': (filename, xml_data, 'text/xml')
             }
             
-            data = {
-                'invoice_format': invoice_format
-            }
+            data = {}
             
             headers = {}
             if FINTOM_API_KEY:
