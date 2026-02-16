@@ -2,12 +2,14 @@
 import asyncio
 import httpx
 import json
+import os
 from pathlib import Path
 from datetime import datetime
 
 # URLs
 CONVERTER_URL = "https://fintom8converter-prod.ey.r.appspot.com/backend/converter-workflowv2/"
 VALIDATOR_URL = "https://fintom8converter-prod.ey.r.appspot.com/backend/validator-workflow/"
+FINTOM_API_KEY = os.getenv("FINTOM_API_KEY")
 
 async def test_all_tools():
     pdf_path = Path("/Users/maximdoroshenko/Desktop/fintom8-mcp-server/EN16931_Physiotherapeut.pdf")
@@ -22,10 +24,14 @@ async def test_all_tools():
         print("\n--- [1/3] Тестуємо Конвертацію (PDF -> XML) ---")
         start = datetime.now()
         files = {'file': (pdf_path.name, pdf_path.read_bytes(), 'application/pdf')}
-        data = {'invoice_format': 'ubl'} # Тільки цей параметр, як ми налаштували
+        data = {} # Тепер порожній, як і в сервері
         
+        headers = {}
+        if FINTOM_API_KEY:
+            headers["Authorization"] = f"Bearer {FINTOM_API_KEY}"
+            
         try:
-            resp = await client.post(CONVERTER_URL, files=files, data=data, timeout=300.0)
+            resp = await client.post(CONVERTER_URL, files=files, data=data, headers=headers, timeout=300.0)
             resp.raise_for_status()
             res_json = resp.json()
             xml_content = res_json.get("xml") or res_json.get("ubl_xml")
@@ -48,7 +54,7 @@ async def test_all_tools():
         data = {} # Порожній data, як ми налаштували (дефолти сервера)
         
         try:
-            resp = await client.post(VALIDATOR_URL, files=files, data=data, timeout=300.0)
+            resp = await client.post(VALIDATOR_URL, files=files, data=data, headers=headers, timeout=300.0)
             resp.raise_for_status()
             res_json = resp.json()
             status = "VALID ✅" if res_json.get("is_valid") else "INVALID ❌"
@@ -60,10 +66,10 @@ async def test_all_tools():
         print("\n--- [3/3] Тестуємо Корекцію (XML -> Improved XML) ---")
         start = datetime.now()
         files = {'file': ('invoice.xml', temp_xml.read_bytes(), 'text/xml')}
-        data = {'invoice_format': 'ubl'} # Тільки цей параметр
+        data = {} # Тепер порожній, як і в сервері
         
         try:
-            resp = await client.post(CONVERTER_URL, files=files, data=data, timeout=300.0)
+            resp = await client.post(CONVERTER_URL, files=files, data=data, headers=headers, timeout=300.0)
             resp.raise_for_status()
             res_json = resp.json()
             new_xml = res_json.get("xml") or res_json.get("ubl_xml")

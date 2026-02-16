@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: e-invoice-mcp
-Version: 0.1.12
+Version: 0.1.14
 Summary: MCP Server for Fintom8 E-Invoicing services (Conversion, Validation, Correction)
 Author-email: Igor Nikolaienko <igor@fintom8.com>
 Project-URL: Homepage, https://github.com/NikolaienkoIgor/Fintom8-E-invoice-MCP-server
@@ -68,8 +68,8 @@ To use these tools in Claude, add the following to your configuration file:
 
 ### 1. `convert_pdf_to_invoice`
 Converts PDF invoices to structured UBL format.
--   **Args**: `pdf_path` (path) or `pdf_base64` (string).
--   **Output**: JSON with UBL XML and metadata.
+-   **Args**: `pdf_path` (path).
+-   **Output**: UBL XML.
 
 ### 2. `validate_invoice` (Basic Validation)
 Validates UBL/Peppol XML invoices against compliance rules.
@@ -78,12 +78,12 @@ Validates UBL/Peppol XML invoices against compliance rules.
 
 ### 3. `validate_invoice_v2` (Advanced Validation)
 Deep validation with optional AI explanations.
--   **Args**: `xml_path` (path), `include_explanation` (bool).
--   **Output**: Detailed compliance report with AI insights.
+-   **Args**: `xml_content` (string) or `xml_path` (path).
+-   **Output**: Detailed compliance report.
 
-### 3. `correct_invoice_xml`
+### 4. `correct_invoice_xml`
 AI-powered correction of invalid XML invoices.
--   **Args**: `xml_path` (path), `max_iterations` (int).
+-   **Args**: `xml_content` (string) or `xml_path` (path).
 -   **Output**: Fixed XML content.
 
 ---

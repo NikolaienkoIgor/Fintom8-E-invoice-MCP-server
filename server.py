@@ -15,37 +15,49 @@ FINTOM_VALIDATOR_URL = os.getenv("FINTOM_VALIDATOR_URL", "https://fintom8convert
 FINTOM_API_KEY = os.getenv("FINTOM_API_KEY")
 
 @mcp.tool()
-async def convert_pdf_to_invoice(
-    pdf_path: str = None
+async def convert_invoice(
+    file_path: str = None
 ) -> str:
     """
-    Convert a PDF invoice to structured e-invoice format (UBL) using Fintom8's AI-powered converter.
+    Generate compliant e-invoices from any format, including PDF, XML, JSON, and CSV.
     
-    This tool uses advanced AI to extract invoice data from PDF files and convert them to 
+    This tool uses advanced AI to extract invoice data from various formats and convert them to 
     compliant UBL/Peppol format.
     
     Args:
-        pdf_path: Path to the PDF file to convert
+        file_path: Path to the file to convert (PDF, XML, JSON, or CSV)
         
     Returns:
         JSON string containing the converted invoice in UBL format and conversion metadata.
     """
-    if not pdf_path:
-        return "Error: pdf_path must be provided"
+    if not file_path:
+        return "Error: file_path must be provided"
     
     try:
-        # Prepare the PDF file content
-        if pdf_path:
-            file_path = Path(pdf_path)
-            if not file_path.exists():
-                return f"Error: File not found at {pdf_path}"
-            pdf_content = file_path.read_bytes()
-            filename = file_path.name
+        # Prepare the file content
+        if file_path:
+            path_obj = Path(file_path)
+            if not path_obj.exists():
+                return f"Error: File not found at {file_path}"
+            file_content = path_obj.read_bytes()
+            filename = path_obj.name
+            
+            # Determine MIME type based on extension
+            ext = path_obj.suffix.lower()
+            mime_type = 'application/octet-stream'
+            if ext == '.pdf':
+                mime_type = 'application/pdf'
+            elif ext == '.xml':
+                mime_type = 'text/xml'
+            elif ext == '.json':
+                mime_type = 'application/json'
+            elif ext == '.csv':
+                mime_type = 'text/csv'
         
         async with httpx.AsyncClient(follow_redirects=True) as client:
             # Prepare multipart form data
             files = {
-                'file': (filename, pdf_content, 'application/pdf')
+                'file': (filename, file_content, mime_type)
             }
             
             data = {}

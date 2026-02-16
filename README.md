@@ -12,9 +12,9 @@ This server acts as an intelligent bridge to the AI-driven Fintom8 E-Invoice Pla
 
 ## 🚀 Features
 
--   **PDF to UBL Conversion:** Use Gemini-powered AI to extract data from PDF invoices and generate compliant XML.
+-   **Any-to-Any E-Invoice Conversion:** Generate compliant e-invoices from *any* format, including PDF, XML, JSON, and CSV.
 -   **Automated Validation:** Instant checks against EN16931 and Peppol rules.
--   **Correction:** Automatically fix non-compliant XML invoices.
+-   **AI-Powered Correction:** Automatically fix errors in XML files to ensure seamless integration.
 
 ---
 
@@ -54,9 +54,9 @@ To use these tools in Claude, add the following to your configuration file:
 
 ## 📦 Included Tools
 
-### 1. `convert_pdf_to_invoice`
-Converts PDF invoices to structured UBL format.
--   **Args**: `pdf_path` (path).
+### 1. `convert_invoice`
+Generate compliant e-invoices from any format, including PDF, XML, JSON, and CSV.
+-   **Args**: `file_path` (path).
 -   **Output**: UBL XML.
 
 ### 2. `validate_invoice` (Basic Validation)
