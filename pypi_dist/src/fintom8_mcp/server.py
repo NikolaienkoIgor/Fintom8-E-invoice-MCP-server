@@ -16,6 +16,22 @@ FINTOM_CONVERTER_URL = os.getenv("FINTOM_CONVERTER_URL", "https://fintom8convert
 FINTOM_VALIDATOR_URL = os.getenv("FINTOM_VALIDATOR_URL", "https://fintom8converter-prod.ey.r.appspot.com/backend/validator-workflow/")
 FINTOM_API_KEY = os.getenv("FINTOM_API_KEY")
 
+AUTH_REQUIRED_MESSAGE = """
+⚠️ Authentication Required
+
+An API Key is required to use Fintom8 services. 
+
+How to get access:
+1. Visit our contact form: https://fintom8.com/contact
+2. Submit a request using the template below.
+
+---
+MESSAGE TEMPLATE FOR CONTACT FORM:
+Subject: MCP API Key Request
+Message: "Hi Fintom8 Team, I would like to request an API key for the Fintom8 E-Invoice Agent. My organization name is [Your Organization Name]."
+---
+"""
+
 @mcp.tool()
 async def convert_invoice(
     file_path: str = None
@@ -90,7 +106,9 @@ async def convert_invoice(
                 return response.text
             
     except httpx.HTTPStatusError as e:
-        return f"Error converting PDF to invoice: HTTP {e.response.status_code} - {e.response.text}"
+        if e.response.status_code == 401:
+            return AUTH_REQUIRED_MESSAGE
+        return f"Error converting invoice: HTTP {e.response.status_code} - {e.response.text}"
     except Exception as e:
         return f"Error converting PDF to invoice: {type(e).__name__}: {str(e)}"
 
@@ -144,6 +162,8 @@ async def validate_invoice(
             return response.text
             
     except httpx.HTTPStatusError as e:
+        if e.response.status_code == 401:
+            return AUTH_REQUIRED_MESSAGE
         return f"Error validating invoice: HTTP {e.response.status_code} - {e.response.text}"
     except Exception as e:
         return f"Error validating invoice: {type(e).__name__}: {str(e)}"
@@ -202,6 +222,8 @@ async def validate_invoice_v2(
             return response.text
             
     except httpx.HTTPStatusError as e:
+        if e.response.status_code == 401:
+            return AUTH_REQUIRED_MESSAGE
         return f"Error in validation workflow: HTTP {e.response.status_code} - {e.response.text}"
     except Exception as e:
         return f"Error in validation workflow: {type(e).__name__}: {str(e)}"
@@ -271,6 +293,8 @@ async def correct_invoice_xml(
                 return response.text
             
     except httpx.HTTPStatusError as e:
+        if e.response.status_code == 401:
+            return AUTH_REQUIRED_MESSAGE
         return f"Error in correction workflow: HTTP {e.response.status_code} - {e.response.text}"
     except Exception as e:
         return f"Error in correction workflow: {type(e).__name__}: {str(e)}"
