@@ -20,7 +20,7 @@ AUTH_REQUIRED_MESSAGE = """
 An API Key is required to use Fintom8 services. 
 
 How to get access:
-1. Visit our contact form: https://fintom8.com/contact
+1. Visit our contact form: https://fintom8.com/#contact
 2. Submit a request using the template below.
 
 ---

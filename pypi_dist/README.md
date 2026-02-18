@@ -12,8 +12,8 @@ This server acts as an intelligent bridge to the AI-driven Fintom8 E-Invoice Pla
 
 ## 🚀 Features
 
--   **PDF to UBL Conversion:** Use Gemini-powered AI to extract data from PDF invoices and generate compliant XML.
--   **Automated Validation:** Instant checks against EN16931 and Peppol rules.
+-   **PDF to UBL Conversion:** Generate compliant e-invoices from any format, including PDF, XML, JSON and CSV. Automatically correct errors in XML files to ensure seamless integration with your system.
+-   **Automated Validation:** Validate your ZUGFeRD and UBL e-invoices against 300+ EN16931 rules. AI-driven PDF–XML comparison ensures your invoices meet compliance standards.
 -   **Correction:** Automatically fix non-compliant XML invoices.
 
 ---
