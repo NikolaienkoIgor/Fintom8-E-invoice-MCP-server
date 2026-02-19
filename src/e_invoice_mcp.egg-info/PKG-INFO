@@ -1,3 +1,17 @@
+Metadata-Version: 2.4
+Name: e-invoice-mcp
+Version: 0.1.20
+Summary: MCP Server for Fintom8 E-Invoicing services (Conversion, Validation, Correction)
+Author-email: Igor Nikolaienko <igor@fintom8.com>
+Project-URL: Homepage, https://github.com/NikolaienkoIgor/Fintom8-E-invoice-MCP-server
+Project-URL: Issues, https://github.com/NikolaienkoIgor/Fintom8-E-invoice-MCP-server/issues
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: fastmcp
+Requires-Dist: httpx
+Dynamic: license-file
+
 # Fintom8 E-Invoicing Agent (MCP)
 
 [![PyPI version](https://img.shields.io/pypi/v/e-invoice-mcp.svg)](https://pypi.org/project/e-invoice-mcp/)
@@ -14,7 +28,7 @@ This server acts as an intelligent bridge to the AI-driven Fintom8 E-Invoice Pla
 
 -   **PDF to UBL Conversion:** Generate compliant e-invoices from any format, including PDF, XML, JSON and CSV. Automatically correct errors in XML files to ensure seamless integration with your system.
 -   **Automated Validation:** Validate your ZUGFeRD and UBL e-invoices against 300+ EN16931 rules. AI-driven PDF–XML comparison ensures your invoices meet compliance standards.
--   **Correction:** Automatically fix non-compliant XML invoices.
+-   **Correction:** Automatically correct errors in XML files to ensure seamless integration with your system.
 
 ---
 

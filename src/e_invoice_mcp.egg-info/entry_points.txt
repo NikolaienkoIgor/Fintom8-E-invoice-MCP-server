@@ -1,0 +1,2 @@
+[console_scripts]
+e-invoice-mcp = fintom8_mcp.server:main

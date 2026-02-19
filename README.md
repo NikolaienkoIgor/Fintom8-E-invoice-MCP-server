@@ -12,9 +12,9 @@ This server acts as an intelligent bridge to the AI-driven Fintom8 E-Invoice Pla
 
 ## 🚀 Features
 
--   **Any-to-Any E-Invoice Conversion:** Generate compliant e-invoices from *any* format, including PDF, XML, JSON, and CSV.
--   **Automated Validation:** Instant checks against EN16931 and Peppol rules.
--   **AI-Powered Correction:** Automatically fix errors in XML files to ensure seamless integration.
+-   **PDF to UBL Conversion:** Generate compliant e-invoices from any format, including PDF, XML, JSON and CSV. Automatically correct errors in XML files to ensure seamless integration with your system.
+-   **Automated Validation:** Validate your ZUGFeRD and UBL e-invoices against 300+ EN16931 rules. AI-driven PDF–XML comparison ensures your invoices meet compliance standards.
+-   **Correction:** Automatically correct errors in XML files to ensure seamless integration with your system.
 
 ---
 
@@ -54,9 +54,9 @@ To use these tools in Claude, add the following to your configuration file:
 
 ## 📦 Included Tools
 
-### 1. `convert_invoice`
-Generate compliant e-invoices from any format, including PDF, XML, JSON, and CSV.
--   **Args**: `file_path` (path).
+### 1. `convert_pdf_to_invoice`
+Converts PDF invoices to structured UBL format.
+-   **Args**: `pdf_path` (path).
 -   **Output**: UBL XML.
 
 ### 2. `validate_invoice` (Basic Validation)

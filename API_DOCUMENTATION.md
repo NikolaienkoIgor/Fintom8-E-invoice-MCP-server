@@ -10,7 +10,6 @@ Converts a PDF invoice to a structured UBL/Peppol XML format.
 *   **Endpoint**: `https://fintom8converter-prod.ey.r.appspot.com/backend/converter-workflowv2/`
 *   **Parameters**:
     *   `pdf_path` (string): Absolute path to the local PDF file.
-    *   `pdf_base64` (string): Alternatively, send the file as a base64 string.
     *   `invoice_format` (default: `"ubl"`): The target e-invoice format.
     *   `gemini_model` (default: `"gemini-3-flash-preview"`): The model used for extraction.
     *   `max_iterations` (default: `3`): Number of AI passes to refine the result.
