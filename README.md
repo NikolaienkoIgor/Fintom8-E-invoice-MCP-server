@@ -12,7 +12,7 @@ This server acts as an intelligent bridge to the AI-driven Fintom8 E-Invoice Pla
 
 ## 🚀 Features
 
--   **PDF to UBL Conversion:** Generate compliant e-invoices from any format, including PDF, XML, JSON and CSV. Automatically correct errors in XML files to ensure seamless integration with your system.
+-   **PDF to UBL Conversion:** Generate compliant e-invoices from any format, including PDF, XML, JSON and CSV.
 -   **Automated Validation:** Validate your ZUGFeRD and UBL e-invoices against 300+ EN16931 rules. AI-driven PDF–XML comparison ensures your invoices meet compliance standards.
 -   **Correction:** Automatically correct errors in XML files to ensure seamless integration with your system.
 
@@ -73,6 +73,16 @@ Deep validation with optional AI explanations.
 AI-powered correction of invalid XML invoices.
 -   **Args**: `xml_content` (string) or `xml_path` (path).
 -   **Output**: Fixed XML content.
+
+---
+
+## Deploy to Google Cloud (HTTP transport)
+
+To run the server over **HTTP** (e.g. for remote MCP clients), deploy to **Google Cloud Run** or **App Engine**. The server uses HTTP when `MCP_TRANSPORT=http` or when running on Cloud Run / App Engine.
+
+See **[DEPLOYMENT.md](DEPLOYMENT.md)** for the full guide: Cloud Run, **App Engine Standard** (`app.yaml`) and **App Engine Flexible** (Docker), env vars, and security.
+
+When deployed over HTTP, you can also call tools **without a session** via REST: `POST /api/validate_invoice`, `/api/validate_invoice_v2`, `/api/correct_invoice_xml`, `/api/convert_invoice` — see DEPLOYMENT.md for single-curl examples.
 
 ---
 

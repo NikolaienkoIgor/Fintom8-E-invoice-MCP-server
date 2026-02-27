@@ -1,0 +1,27 @@
+# App Engine Standard (Python 3) — HTTP transport for Fintom8 E-Invoice MCP
+runtime: python312
+service: mcp-server
+
+# Serve the ASGI app with uvicorn; bind to PORT set by App Engine
+# main:app uses main.py (adds src to path, imports app); deps from requirements.txt
+entrypoint: python -m uvicorn main:app --host 0.0.0.0 --port $PORT
+
+env_variables:
+  MCP_TRANSPORT: "http"
+  # Set FINTOM_API_KEY in the Google Cloud Console (App Engine > Configuration > Environment variables)
+  # or via: gcloud app deploy --set-env-vars FINTOM_API_KEY=your-key
+
+# Optional: override converter/validator URLs
+# env_variables:
+#   FINTOM_CONVERTER_URL: "https://..."
+#   FINTOM_VALIDATOR_URL: "https://..."
+
+instance_class: F1
+
+automatic_scaling:
+  target_cpu_utilization: 0.65
+  min_instances: 0
+  max_instances: 4
+  min_idle_instances: automatic
+  max_idle_instances: automatic
+  max_concurrent_requests: 80

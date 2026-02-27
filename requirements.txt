@@ -1,0 +1,5 @@
+# App Engine Standard installs from this file (not pyproject.toml)
+fastmcp
+httpx
+uvicorn[standard]
+fastapi
